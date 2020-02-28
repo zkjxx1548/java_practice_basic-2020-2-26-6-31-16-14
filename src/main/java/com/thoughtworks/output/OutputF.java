@@ -30,7 +30,6 @@ public class OutputF implements OutputCheck {
     public String getInstruction() {
         int numberA = Integer.parseInt(this.output.charAt(0) + "");
         int numberB = Integer.parseInt(this.output.charAt(2) + "");
-        //return String.format("%d correct, %d and %d wrong position", 555, numberB, (4 - numberA));
-        return "wwwww";
+        return String.format("%d correct, %d and %d wrong position", numberA, numberB, (4 - numberA));
     }
 }
