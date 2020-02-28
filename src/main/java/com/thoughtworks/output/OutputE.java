@@ -28,7 +28,7 @@ public class OutputE implements OutputCheck {
 
     @Override
     public String getInstruction() {
-        int numberA = Integer.parseInt(this.output.charAt(0) + "");
+        int numberA = Integer.parseInt(String.valueOf(this.output.charAt(0)));
         return String.format("%d correct", numberA);
     }
 }

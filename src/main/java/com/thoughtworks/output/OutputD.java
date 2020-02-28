@@ -28,8 +28,8 @@ public class OutputD implements OutputCheck {
 
     @Override
     public String getInstruction() {
-        int numberA = Integer.parseInt(this.output.charAt(0) +"");
-        int numberB = Integer.parseInt(this.output.charAt(2) +"");
+        int numberA = Integer.parseInt(String.valueOf(this.output.charAt(0)));
+        int numberB = Integer.parseInt(String.valueOf(this.output.charAt(2)));
         return String.format("%d and %d wrong position", numberB, (4 - numberA));
     }
 }

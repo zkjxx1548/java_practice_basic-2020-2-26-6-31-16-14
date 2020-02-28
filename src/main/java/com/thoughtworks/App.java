@@ -48,8 +48,8 @@ public class App {
     int numberB = 0;
 
     for (int i = 0; i < answer.length(); i++) {
-      int input = Integer.parseInt(str.charAt(i) +"");
-      if (input == Integer.parseInt(answer.charAt(i) + "")) {
+      int input = Integer.parseInt(String.valueOf(str.charAt(i)));
+      if (input == Integer.parseInt(String.valueOf(answer.charAt(i)))) {
         numberA++;
         continue;
       }
@@ -67,8 +67,8 @@ public class App {
 
   //根据output返回OutputCheck类型的不同实例
   public static OutputCheck getOutputObj(String input, String output) {
-    int numberA = Integer.parseInt(output.charAt(0) + "");
-    int numberB = Integer.parseInt(output.charAt(2) + "");
+    int numberA = Integer.parseInt(String.valueOf(output.charAt(0)));
+    int numberB = Integer.parseInt(String.valueOf(output.charAt(2)));
     if (numberA == 0 && numberB == 0) {
       return new OutputA(input, output);
     } else if (numberA == 0 && numberB == 4) {
