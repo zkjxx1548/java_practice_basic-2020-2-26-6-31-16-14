@@ -3,10 +3,12 @@ package com.thoughtworks.data;
 import com.thoughtworks.OutputWrongException;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
-public class ReadAnswer {
-    public static final String ANSWER_PATH = "src/main/resources/answer.txt";
+public class AnswerReader {
+    public static final Path ANSWER_PATH = Paths.get("answer.txt");
 
     public String readAnswerStr() {
         if (!isHaveFile()) {
@@ -14,15 +16,13 @@ public class ReadAnswer {
         }
         //读取
         StringBuilder sb = new StringBuilder("");
-        try (FileReader fileReader = new FileReader(ANSWER_PATH);
+        try (FileReader fileReader = new FileReader(ANSWER_PATH.toString());
              BufferedReader bufferedReader = new BufferedReader(fileReader)
-
         ) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,7 +31,7 @@ public class ReadAnswer {
         try {
             isCorrectAnswer(sb.toString());
         } catch (Exception e) {
-            File file = new File(ANSWER_PATH);
+            File file = new File(ANSWER_PATH.toString());
             file.delete();
             return buildFile();
         }
@@ -40,13 +40,13 @@ public class ReadAnswer {
     }
 
     public boolean isHaveFile() {
-        return new File(ANSWER_PATH).isFile();
+        return new File(ANSWER_PATH.toString()).isFile();
     }
 
     public String buildFile() {
         String res = "";
         try {
-            File newFile = new File(ANSWER_PATH);
+            File newFile = new File(ANSWER_PATH.toString());
             newFile.createNewFile();
             try (FileWriter fileWrite = new FileWriter(newFile);
                 BufferedWriter out = new BufferedWriter(fileWrite)
@@ -75,20 +75,20 @@ public class ReadAnswer {
         return sb.toString();
     }
 
-    public boolean isCorrectAnswer(String str) {
+    public static boolean isCorrectAnswer(String str) {
         if (str.length() != 4) {
-            throw new OutputWrongException("Wrong input");
+            return false;
         }
         HashSet<Integer> set = new HashSet<>();
         for (int i = 0; i < str.length(); i++) {
             int number = Integer.parseInt(str.charAt(i) + "");
             set.add(number);
             if (number < 0 || number > 9) {
-                throw new OutputWrongException("Wrong input");
+                return false;
             }
         }
         if (set.size() != 4) {
-            throw new OutputWrongException("Wrong input");
+            return false;
         }
         return true;
     }
