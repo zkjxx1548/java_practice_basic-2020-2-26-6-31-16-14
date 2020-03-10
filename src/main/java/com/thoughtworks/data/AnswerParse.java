@@ -11,20 +11,22 @@ public class AnswerParse {
         for (int i = 0; i < answer.getNumber().length(); i++) {
             String guessStr = guess.getNumber();
             String answerStr = answer.getNumber();
-            int input = Integer.parseInt(guessStr.charAt(i) +"");
-            if (input == Integer.parseInt(answerStr.charAt(i) + "")) {
+            int input = Integer.parseInt(String.valueOf(guessStr.charAt(i)));
+            if (input == Integer.parseInt(String.valueOf(answerStr.charAt(i) ))) {
                 correctCount++;
                 continue;
             }
             int j = 0;
             while (j < 4) {
-                if (input == Integer.parseInt(answerStr.charAt(j) + "")) {
+                if (input == Integer.parseInt(String.valueOf(answerStr.charAt(j)))) {
                     onlyNumberCorrectCount++;
                     break;
                 }
                 j++;
             }
         }
+        System.out.println(correctCount);
+        System.out.println(onlyNumberCorrectCount);
         return new NormalGuessResult(correctCount, onlyNumberCorrectCount);
     }
 }

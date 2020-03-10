@@ -1,6 +1,7 @@
 package com.thoughtworks.data;
 
 import com.thoughtworks.OutputWrongException;
+import com.thoughtworks.game.Game;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -9,87 +10,53 @@ import java.util.*;
 
 public class AnswerReader {
     public static final Path ANSWER_PATH = Paths.get("answer.txt");
+    private static final int ANSWER_NUMBER_LIMIT = 10;
+    private static final String ANSWER_DELIMITER = "";
 
-    public String readAnswerStr() {
-        if (!isHaveFile()) {
-            buildFile();
-        }
-        //读取
-        StringBuilder sb = new StringBuilder("");
-        try (FileReader fileReader = new FileReader(ANSWER_PATH.toString());
-             BufferedReader bufferedReader = new BufferedReader(fileReader)
-        ) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //判断合理否
-        try {
-            isCorrectAnswer(sb.toString());
+    public Answer readAnswer() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream(ANSWER_PATH.toString())) {
+            Objects.requireNonNull(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String number = bufferedReader.readLine();
+            Answer answer = new Answer(number);
+            isCorrectAnswer(answer);
+            return answer;
         } catch (Exception e) {
-            File file = new File(ANSWER_PATH.toString());
-            file.delete();
-            return buildFile();
+            return randomGenerate();
         }
-
-        return sb.toString();
     }
 
-    public boolean isHaveFile() {
-        return new File(ANSWER_PATH.toString()).isFile();
+    private Answer randomGenerate() {
+        Random random = new Random();
+        Set<String> digits = new HashSet<>();
+        while (digits.size() < Answer.LENGTH) {
+            int digit = random.nextInt(ANSWER_NUMBER_LIMIT);
+            digits.add(String.valueOf(digit));
+        }
+        String number = String.join(ANSWER_DELIMITER, digits);
+
+        return new Answer(number);
     }
 
-    public String buildFile() {
-        String res = "";
-        try {
-            File newFile = new File(ANSWER_PATH.toString());
-            newFile.createNewFile();
-            try (FileWriter fileWrite = new FileWriter(newFile);
-                BufferedWriter out = new BufferedWriter(fileWrite)
-            ) {
-                res = getAnswer();
-                out.write(res);
-                out.flush();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void isCorrectAnswer(Answer answer) {
+        String number = answer.getNumber();
+        boolean correct = number.length() == Answer.LENGTH;
 
-        return res;
-    }
-
-    public String getAnswer() {
-        Set<Integer> set = new HashSet<>();
-        while (set.size() < 4) {
-            Random random = new Random();
-            set.add(random.nextInt(10));
-        }
-        StringBuilder sb = new StringBuilder("");
-        for (Integer i : set) {
-            sb.append(i.toString());
-        }
-        return sb.toString();
-    }
-
-    public static boolean isCorrectAnswer(String str) {
-        if (str.length() != 4) {
-            return false;
-        }
-        HashSet<Integer> set = new HashSet<>();
-        for (int i = 0; i < str.length(); i++) {
-            int number = Integer.parseInt(str.charAt(i) + "");
-            set.add(number);
-            if (number < 0 || number > 9) {
-                return false;
+        for (char num : number.toCharArray()) {
+            if (!Character.isDigit(num)) {
+                correct = false;
+                break;
             }
         }
-        if (set.size() != 4) {
-            return false;
+
+        HashSet<String> nums = new HashSet<>(Arrays.asList(number.split("")));
+        if (nums.size() < number.length()) {
+            correct = false;
         }
-        return true;
+
+        if (!correct) {
+            throw new OutputWrongException();
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.thoughtworks.data;
 
 public class Answer {
-    private static final int LENGTH = 4;
+    public static final int LENGTH = 4;
 
     private String number;
 

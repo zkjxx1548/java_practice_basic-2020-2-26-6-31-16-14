@@ -1,7 +1,9 @@
 package com.thoughtworks.result;
 
+import com.thoughtworks.data.Answer;
+
 public class NormalGuessResult implements GuessResult {
-    private static final String RESULT_TEMPLATE = "%sA%sB";
+    private static final String RESULT_TEMPLATE = "%dA%dB";
 
     private int correctCount;
     private int onlyNumberCorrectCount;
@@ -18,6 +20,6 @@ public class NormalGuessResult implements GuessResult {
 
     @Override
     public boolean isCorrect() {
-        return true;
+        return correctCount == Answer.LENGTH;
     }
 }
